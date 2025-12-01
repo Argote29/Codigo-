@@ -1,0 +1,148 @@
+<div class="main-container">
+  <div class="form-card">
+    
+    <h2 class="title">
+      {{ edicion ? 'Editar Restaurante' : 'Registrar Restaurante' }}
+    </h2>
+
+    <form [formGroup]="form" (submit)="aceptar()">
+
+      <!-- ID (solo edición) -->
+      @if (edicion) {
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>ID</mat-label>
+          <input matInput formControlName="codigo" readonly />
+        </mat-form-field>
+      }
+
+      <!-- NOMBRE -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nombre del Restaurante</mat-label>
+        <input matInput formControlName="nombre" />
+
+        <mat-error>
+          @if (form.get('nombre')?.hasError('required')) {
+            Ingrese nombre del restaurante!!
+          }
+        </mat-error>
+      </mat-form-field>
+
+
+      <!-- UBICACIÓN + MAPA -->
+      <div class="ubicacion-container">
+        
+        <!-- Texto de ubicación -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Ubicación</mat-label>
+          <input 
+            matInput 
+            formControlName="ubicacion" 
+            readonly
+            placeholder="Haz clic en el mapa para obtener la dirección" 
+          />
+
+          <mat-hint>Selecciona en el mapa la ubicación exacta</mat-hint>
+
+          <mat-error>
+            @if (form.get('ubicacion')?.hasError('required')) {
+              Seleccione la ubicación del restaurante!!
+            }
+          </mat-error>
+        </mat-form-field>
+
+        <!-- MAPA -->
+        <div class="map-wrapper map-styles">
+          <google-map
+            height="300px"
+            width="100%"
+            [center]="center"
+            [zoom]="zoom"
+            [options]="mapOptions"
+            (mapClick)="seleccionarUbicacion($event)"
+          >
+
+            <map-marker
+              *ngIf="markerPosition"
+              [position]="markerPosition">
+            </map-marker>
+
+          </google-map>
+        </div>
+
+      </div>
+
+
+      <!-- TIPO DE COCINA -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Tipo de cocina</mat-label>
+        <input matInput formControlName="cocinatip" />
+
+        <mat-error>
+          @if (form.get('cocinatip')?.hasError('required')) {
+            Ingrese el tipo de cocina!!
+          }
+        </mat-error>
+      </mat-form-field>
+
+
+      <!-- HORARIO -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Horario de atención</mat-label>
+        <input 
+          matInput 
+          formControlName="Tiempo"
+          placeholder="Ej: 9:00 AM - 10:00 PM"
+        />
+
+        <mat-error>
+          @if (form.get('Tiempo')?.hasError('required')) {
+            Ingrese el horario de atención!!
+          }
+          @if (form.get('Tiempo')?.hasError('pattern')) {
+            El horario debe tener entre 3 y 40 caracteres!!
+          }
+        </mat-error>
+      </mat-form-field>
+
+
+      <!-- CONTACTO -->
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Teléfono de contacto</mat-label>
+        <input 
+          matInput 
+          type="number" 
+          formControlName="numero"
+          placeholder="Ej: 987654321"
+        />
+
+        <mat-error>
+          @if (form.get('numero')?.hasError('required')) {
+            Ingrese un número de contacto!!
+          }
+          @if (form.get('numero')?.hasError('pattern')) {
+            Solo números permitidos!!
+          }
+          @if (form.get('numero')?.hasError('minlength')) {
+            Mínimo 7 dígitos!!
+          }
+          @if (form.get('numero')?.hasError('maxlength')) {
+            Máximo 9 dígitos!!
+          }
+        </mat-error>
+      </mat-form-field>
+
+
+      <!-- BOTONES -->
+      <div class="actions">
+        <button mat-raised-button class="register-button" type="submit">
+          {{ edicion ? 'Actualizar' : 'Registrar' }}
+        </button>
+
+        <button mat-button class="cancel-button" type="button" (click)="volverAPadre()">
+          Cancelar
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
